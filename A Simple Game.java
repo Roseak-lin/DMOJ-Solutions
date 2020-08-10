@@ -1,48 +1,28 @@
-package other;
-
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 
-public class Castle_Invasion2 {
+public class Simple_Game {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		Reader in = new Reader();
-		int s = in.nextInt();
-		long[] x = new long[1000001];
-		long maxX = 0;
-		long[] y = new long[1000001];
-		long maxY = 0;
-
-		for (int i = 0; i < s; i++) {
-			long n = in.nextLong();
-			x[(int) n]++;
-			maxX = Math.max(maxX, n);
+		int n = in.nextInt(), q = in.nextInt();
+		int front[] = new int[n + 1], end[] = new int[n + 1], arr[] = new int[n + 1];
+		for (int i = 1; i <= n; i++) {
+			arr[i] = in.nextInt();
 		}
-
-		for (int i = 0; i < s; i++) {
-			long n = in.nextLong();
-			y[(int) n]++;
-			maxY = Math.max(maxY, n);
+		front[1] = 1;
+		end[n] = n;
+		for (int i = 2; i <= n; i++) {
+			front[i] = arr[front[i - 1]] < arr[i] ? i : front[i - 1];
 		}
-		in.close();
-		if (maxY != maxX) {
-			System.out.println(-1);
-			System.exit(0);
+		for (int i = n - 1; i > -1; i--) {
+			end[i] = arr[end[i + 1]] < arr[i] ? i : end[i + 1];
 		}
-
-		for (int i = (int) maxX - 1; i >= 0; i--) {
-			x[i] += x[i + 1];
-			y[i] += y[i + 1];
+		while (q-- != 0) {
+			int p = in.nextInt();
+			System.out.println(front[p - 1] + " " + end[p + 1]);
 		}
-
-		long max = 0;
-
-		for (int i = (int) maxX; i >= 1; i--)
-			max += x[i] * y[i];
-
-		System.out.println(max);
 	}
 
 	static class Reader {
@@ -64,7 +44,7 @@ public class Castle_Invasion2 {
 		}
 
 		public String readLine() throws IOException {
-			byte[] buf = new byte[64]; // line length
+			byte[] buf = new byte[100000];
 			int cnt = 0, c;
 			while ((c = read()) != -1) {
 				if (c == '\n')
@@ -148,34 +128,5 @@ public class Castle_Invasion2 {
 				return;
 			din.close();
 		}
-	}
-
-	static long[] sort(long[] x) {
-		int n = x.length;
-		if (n < 2) {
-			return x;
-		}
-		long[] left = Arrays.copyOfRange(x, 0, n / 2);
-		long[] right = Arrays.copyOfRange(x, n / 2, n);
-		long[] sortedLeft = sort(left);
-		long[] sortedRight = sort(right);
-		return merge(sortedLeft, sortedRight, n);
-	}
-
-	static long[] merge(long[] sortedLeft, long[] sortedRight, int n) {
-		long[] result = new long[n];
-		int l = 0;
-		int r = 0;
-
-		for (int i = 0; i < n; i++) {
-			if (l < sortedLeft.length && (r >= sortedRight.length || sortedLeft[l] < sortedRight[r])) {
-				result[i] = (int) sortedLeft[l];
-				l++;
-			} else {
-				result[i] = (int) sortedRight[r];
-				r++;
-			}
-		}
-		return result;
 	}
 }
