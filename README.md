@@ -1,2 +1,2 @@
 # DMOJ-solutions
-Solutions to problems from dmoj.ca in c++ and java
+Solutions to problems from dmoj.ca written in C++ and Java
